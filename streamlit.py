@@ -1,5 +1,5 @@
 import streamlit as st
-
+from rag_pipeline import answer_query,retrieve_docs,llm_model
 uploaded_file = st.file_uploader("Upload Here",
                                  type="pdf",
                                  accept_multiple_files=False)
@@ -11,9 +11,9 @@ if ask_question:
     
     if uploaded_file:
         st.chat_message("user").write(user_query)
-    
-        fixed_response = "Hi, this is a fixed response!"
-        st.chat_message("AI Lawyer").write(fixed_response)
+        retrieved_docs=retrieve_docs(user_query)
+        response = answer_query(documents=retrieved_docs, model=llm_model, query=user_query)
+        st.chat_message("AI Lawyer").write(response)
     else:
         st.error("Upload a valid file")
         
